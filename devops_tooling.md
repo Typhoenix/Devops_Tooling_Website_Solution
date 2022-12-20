@@ -201,3 +201,110 @@ sudo systemctl enable nfs-server.service
 
 sudo systemctl status nfs-server.service
 ```
+![](assets/6.png)
+
+8. Set the mount point directory to allow read and write permissions to our webserver 
+```
+sudo chown -R nobody: /mnt/apps
+sudo chown -R nobody: /mnt/logs
+sudo chown -R nobody: /mnt/opt
+ 
+sudo chmod -R 777 /mnt/apps
+sudo chmod -R 777 /mnt/logs
+sudo chmod -R 777 /mnt/opt
+ 
+sudo systemctl restart nfs-server.service
+```
+Restart NFS server 
+
+`sudo systemctl restart nfs-server`
+
+>Note: In this project, we will be creating our NFS-server, web-servers and database-server all in the same subnet
+
+9. Next we configure NFS to interact with clients present in the same subnet.
+
+We can find the subnet ID and CIDR in the Networking tab of our instances
+
+![](assets/7.png)
+
+![](assets/8.png)
+
+`sudo vi /etc/exports`
+
+Edit the file like the image below:
+
+![](assets/9.png)
+
+10. Check which port is used by NFS and open it using Security Groups (add new Inbound Rule)
+    
+`rpcinfo -p | grep nfs`
+
+```
+Output:
+
+100003    3   tcp   2049  nfs
+100003    4   tcp   2049  nfs
+100227    3   tcp   2049  nfs_acl
+```
+ >In order for NFS server to be accessible from your client, you must also open following ports:
+
+ ![](assets/10.png)
+
+ ## Step 2 -Confiqure the Web Server
+Create an Ubuntu Server on AWS which will serve as our Database. **Ensure its in the same subnet as the NFS-Server**
+
+- Install mysql-server
+
+```
+sudo apt update
+
+sudo apt upgrade
+
+sudo apt install mysql-server
+
+mysql --version
+
+sudo mysql_secure_installation
+```
+- Create a database user with name webaccess and grant permission to the user on tooling db to be able to do anything only from the webservers subnet cidr
+  
+  `sudo mysql`
+
+```
+sudo mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.31-0ubuntu0.20.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE tooling;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| tooling            |
++--------------------+
+5 rows in set (0.02 sec)
+
+mysql> CREATE USER 'webaccess'@'%' IDENTIFIED BY 'password';
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> GRANT ALL PRIVILEGES ON tooling.* TO 'webaccess'@'%';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> exit
+Bye
+```
