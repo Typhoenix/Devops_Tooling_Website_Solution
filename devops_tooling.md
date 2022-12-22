@@ -308,3 +308,61 @@ Query OK, 0 rows affected (0.01 sec)
 mysql> exit
 Bye
 ```
+## Step 3 -Preparing Web Servers
+Create a RHEL EC2 instance on AWS which serves as our web server. Also remember to have in it in same subnet
+
+A couple of configurations will be done on the web servers:
+
+- configuring NFS client
+- deploying tooling website application
+- configure servers to work with database
+
+1. Installing NFS-Client
+
+`sudo yum install nfs-utils nfs4-acl-tools -y`
+
+Mount /var/www/ and target the NFS server’s export for apps
+
+`sudo mkdir /var/www`
+
+`sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www`
+
+Verify that NFS was mounted successfully by running `df -h`. 
+
+![](assets/12.png)
+
+Make sure that the changes will persist on Web Server after reboot:
+
+`sudo vi /etc/fstab`
+
+add following line:
+```
+<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
+```
+![](assets/11.png)
+
+2. Installing Apache and Php
+```
+sudo yum install httpd -y
+
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+sudo dnf module reset php
+
+sudo dnf module enable php:remi-7.4
+
+sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
+
+sudo systemctl start php-fpm
+
+sudo systemctl enable php-fpm
+
+sudo setsebool -P httpd_execmem 1
+```
+We can see that both /var/www and /mnt/apps contains same content. This shows that both mount points are connected via NFS.
+![](assets/13.png)
+![](assets/14.png)
+
+We locate the log folder for Apache on the Web Server and mount it to NFS server’s export for logs. Make sure the mount point will persist after reboot.
