@@ -132,11 +132,11 @@ VG         #PV #LV #SN Attr   VSize   VFree
 ```
 5. Use lvcreate utility to create 3 logical volumes:lv-opt lv-apps, and lv-logs
    
-`sudo lvcreate -n lv-opt -L 10G webdata-vg`
+`sudo lvcreate -n lv-opt -L 9G webdata-vg`
 
-`sudo lvcreate -n lv-apps -L 10G webdata-vg`
+`sudo lvcreate -n lv-apps -L 9G webdata-vg`
 
-`sudo lvcreate -n lv-logs -L 8G webdata-vg`
+`sudo lvcreate -n lv-logs -L 9G webdata-vg`
 
 ```
 Output:
@@ -149,9 +149,9 @@ run `sudo lvs`
 ```
 Output:
   LV      VG         Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  lv-apps webdata-vg -wi-a----- 10.00g
+  lv-apps webdata-vg -wi-a----- 9.00g
   lv-logs webdata-vg -wi-a-----  9.00g
-  lv-opt  webdata-vg -wi-a----- 10.00g
+  lv-opt  webdata-vg -wi-a----- 9.00g
 ```
 - Format the disks as xfs
   
@@ -160,6 +160,26 @@ sudo mkfs -t xfs /dev/webdata-vg/lv-apps
 sudo mkfs -t xfs /dev/webdata-vg/lv-logs
 sudo mkfs -t xfs /dev/webdata-vg/lv-opt
 ```
+`sudo lsblk`
+```
+Output:
+[ec2-user@ip-172-31-89-198 ~]$ sudo lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+xvda                     202:0    0   10G  0 disk
+├─xvda1                  202:1    0    1M  0 part
+├─xvda2                  202:2    0  200M  0 part /boot/efi
+├─xvda3                  202:3    0  500M  0 part /boot
+└─xvda4                  202:4    0  9.3G  0 part /
+xvdf                     202:80   0   10G  0 disk
+└─xvdf1                  202:81   0   10G  0 part
+  └─webdata--vg-lv--opt  253:2    0    9G  0 lvm
+xvdg                     202:96   0   10G  0 disk
+└─xvdg1                  202:97   0   10G  0 part
+  └─webdata--vg-lv--logs 253:1    0    9G  0 lvm
+xvdh                     202:112  0   10G  0 disk
+└─xvdh1                  202:113  0   10G  0 part
+  └─webdata--vg-lv--apps 253:0    0    9G  0 lvm
+  ```
 6. Create mount points on /mnt directory for the logical volumes as follow:
 
 - Mount lv-apps on /mnt/apps – To be used by webservers
@@ -178,7 +198,8 @@ sudo mount /dev/webdata-vg/lv-logs /mnt/logs
 
 sudo mount /dev/webdata-vg/lv-opt /mnt/opt
 ```
->Once mount is completed run 
+>Once mount is completed run:
+
 `sudo blkid` to get the UUID, edit the fstab file accordingly
 
 `sudo vi /etc/fstab`
@@ -234,7 +255,16 @@ We can find the subnet ID and CIDR in the Networking tab of our instances
 Edit the file like the image below:
 
 ![](assets/9.png)
+ 
+ -run this command to export 
+`sudo exportfs -arv`
 
+```
+Output:
+exporting 172.31.0.0/16:/mnt/opt
+exporting 172.31.0.0/16:/mnt/logs
+exporting 172.31.0.0/16:/mnt/apps
+```
 10. Check which port is used by NFS and open it using Security Groups (add new Inbound Rule)
     
 `rpcinfo -p | grep nfs`
@@ -299,15 +329,23 @@ mysql> show databases;
 +--------------------+
 5 rows in set (0.02 sec)
 
-mysql> CREATE USER 'webaccess'@'%' IDENTIFIED BY 'password';
-Query OK, 0 rows affected (0.04 sec)
+mysql> create database tooling;
+Query OK, 1 row affected (0.01 sec)
 
-mysql> GRANT ALL PRIVILEGES ON tooling.* TO 'webaccess'@'%';
+mysql> create user 'webaccess'@'172.31.0.0/16' identified by 'password';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> grant all privileges on tooling.* to 'webaccess'@'172.31.0.0/16';
 Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
 
 mysql> exit
 Bye
 ```
+>The ip address is the webserver's IPv4 CIDR
+
 ## Step 3 -Preparing Web Servers
 Create a RHEL EC2 instance on AWS which serves as our web server. Also remember to have in it in same subnet
 
@@ -330,6 +368,8 @@ Mount /var/www/ and target the NFS server’s export for apps
 Verify that NFS was mounted successfully by running `df -h`. 
 
 ![](assets/12.png)
+
+>You can test the mount by creating a file on the web server and checking to see it on the nfs server
 
 Make sure that the changes will persist on Web Server after reboot:
 
@@ -365,4 +405,34 @@ We can see that both /var/www and /mnt/apps contains same content. This shows th
 ![](assets/13.png)
 ![](assets/14.png)
 
-We locate the log folder for Apache on the Web Server and mount it to NFS server’s export for logs. Make sure the mount point will persist after reboot.
+3. We locate the log folder for Apache on the Web Server and mount it to NFS server’s export for logs. Make sure the mount point will persist after reboot.
+
+`sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd`
+
+`sudo vi /etc/fstab`
+
+4. Fork the tooling source code to your Github account. <https://github.com/Typhoenix/tooling?organization=Typhoenix&organization=Typhoenix>
+
+5.Deploy the tooling website’s code to the Webserver. Ensure that the html folder from the repository is deployed to /var/www/html
+ 
+`sudo yum install git -y`
+
+![](assets/15.png)
+![](assets/16.png)
+
+>Do not forget to open TCP port 80 on the Web Server.
+![](assets/17.png)
+
+>If you encounter 403 Error – check permissions to your /var/www/html folder and also disable `SELinux sudo setenforce 0`
+To make this change permanent – open following config file 
+`sudo vi /etc/sysconfig/selinux`
+and set **SELINUX=disabled,** then restart httpd.
+
+```
+sudo systemctl start httpd
+sudo systemctl status httpd
+```
+![](assets/18.png)
+
+
+
