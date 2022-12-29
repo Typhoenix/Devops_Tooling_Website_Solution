@@ -434,5 +434,9 @@ sudo systemctl status httpd
 ```
 ![](assets/18.png)
 
+6. Update the website’s configuration to connect to the database (in **/var/www/html/functions.php** file).
 
-
+![](assets/22.png)
+ 
+ >edit the database private ip address, database username and database name. save and quit
+ 
