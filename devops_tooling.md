@@ -402,6 +402,7 @@ sudo systemctl enable php-fpm
 sudo setsebool -P httpd_execmem 1
 ```
 We can see that both /var/www and /mnt/apps contains same content. This shows that both mount points are connected via NFS.
+
 ![](assets/13.png)
 ![](assets/14.png)
 
@@ -471,11 +472,24 @@ sudo systemctl status httpd
 
 `mysql -h <databse-private-ip> -u <db-username> -p <dbname> < tooling-db.sql`
 
-- If it returns no error, go back to the database to select user: 
-
+8. If it returns no error, create in MySQL a new admin user with username: myuser and password: password:
+ 
 ![](assets/26.png)
 ![](assets/27.png)
 
+9. Open the website in your browser http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php and make sure you can login into the websute with myuser user.
+    
+![](assets/20.png)
+
+> I will be logging in using user name "admin" and corresponding password
+
+![](assets/21.png)
+
+### Congratulations!
+
+![](assets/28.png)
+
+**You have just implemented a web solution for a DevOps team using LAMP stack with remote Database and NFS servers.**
 
 
 
