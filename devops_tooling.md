@@ -439,4 +439,44 @@ sudo systemctl status httpd
 ![](assets/22.png)
  
  >edit the database private ip address, database username and database name. save and quit
- 
+
+ 7. Apply tooling-db.sql script to your database using this command
+   
+`mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
+
+>To do this, you have to follow the following steps:
+
+- Install mysql on web server
+  
+   `sudo yum install mysql -y`
+
+- Open port 3306 on database server
+  
+  ![](assets/23.png)
+
+- You'd also need to configure MySQL server to allow connections from remote hosts.
+  
+`sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf `
+
+![](assets/24.png)
+
+- Restart mysql
+  ```
+  sudo systemctl restart mysql
+  sudo systemctl status mysql
+  ```
+![](assets/25.png)
+
+- From the webserver, apply tooling-db.sql script to your database 
+
+`mysql -h <databse-private-ip> -u <db-username> -p <dbname> < tooling-db.sql`
+
+- If it returns no error, go back to the database to select user: 
+
+![](assets/26.png)
+![](assets/27.png)
+
+
+
+
+
