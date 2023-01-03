@@ -255,7 +255,8 @@ Edit the file like the image below:
 
 ![](assets/9.png)
  
- -run this command to export 
+ - run this command to export 
+
 `sudo exportfs -arv`
 
 ```
@@ -425,8 +426,10 @@ We can see that both /var/www and /mnt/apps contains same content. This shows th
 
 >If you encounter 403 Error – check permissions to your /var/www/html folder and also disable `SELinux sudo setenforce 0`
 To make this change permanent – open following config file 
+
 `sudo vi /etc/sysconfig/selinux`
-and set **SELINUX=disabled,** then restart httpd.
+
+and set **SELINUX=disabled,** then restart httpd;
 
 ```
 sudo systemctl start httpd
@@ -452,11 +455,11 @@ sudo systemctl status httpd
 
 - Open port 3306 on database server
   
-  ![](assets/23.png)
+![](assets/23.png)
 
 - You'd also need to configure MySQL server to allow connections from remote hosts.
   
-`sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf `
+`sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
 
 ![](assets/24.png)
 
