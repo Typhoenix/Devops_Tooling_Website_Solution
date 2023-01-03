@@ -104,8 +104,7 @@ sudo pvcreate /dev/xvdh1
 ```
 Output:
 
-Physical volume "/dev/xvdf1" successfully created.
-  Creating devices file /etc/lvm/devices/system.devices
+  Physical volume "/dev/xvdf1" successfully created.
   Physical volume "/dev/xvdg1" successfully created.
   Physical volume "/dev/xvdh1" successfully created.
   ```
