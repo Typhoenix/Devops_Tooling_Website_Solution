@@ -424,6 +424,7 @@ We can see that both /var/www and /mnt/apps contains same content. This shows th
 ![](assets/16.png)
 
 >Do not forget to open TCP port 80 on the Web Server.
+
 ![](assets/17.png)
 
 >If you encounter 403 Error – check permissions to your /var/www/html folder and also disable `SELinux sudo setenforce 0`
