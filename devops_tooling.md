@@ -477,7 +477,7 @@ sudo systemctl status httpd
 
 `mysql -h <databse-private-ip> -u <db-username> -p <dbname> < tooling-db.sql`
 
-8. If it returns no error, create in MySQL a new admin user with username: myuser and password: password:
+8. If it returns no error, create in MySQL a new admin user with username: myuser 
  
 ![](assets/26.png)
 ![](assets/27.png)
