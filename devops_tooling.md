@@ -453,7 +453,7 @@ sudo systemctl status httpd
 
 - Install mysql on web server
   
-   `sudo yum install mysql -y`
+`sudo yum install mysql -y`
 
 - Open port 3306 on database server
   
