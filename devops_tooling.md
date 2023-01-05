@@ -210,7 +210,7 @@ Verify the mount points
 `sudo mount -a `
 `sudo systemctl daemon-reload`
 
-7. Install NFS server, configure it to start on reboot and make sure it is u and running
+7. Install NFS server, configure it to start on reboot and make sure it is up and running
 
 ```
 sudo yum -y update
