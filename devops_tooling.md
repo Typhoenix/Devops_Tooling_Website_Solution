@@ -44,6 +44,7 @@ To verify, run:
 - Use gdisk utility to create a single partition on each of the 3 disks
   
   `sudo gdisk /dev/xvdh`
+  
 ```
 Output:
 GPT fdisk (gdisk) version 1.0.7
@@ -90,8 +91,9 @@ The operation has completed successfully.
 
 ![](assets/5.png)
 
-3. Install lvm2 package using 
-   `sudo yum install lvm2`
+3. Install lvm2 package using:
+
+`sudo yum install lvm2`
    
 Run `sudo lvmdiskscan` command to check for available partitions
 
