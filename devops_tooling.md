@@ -43,7 +43,7 @@ To verify, run:
 
 - Use gdisk utility to create a single partition on each of the 3 disks
   
-  `sudo gdisk /dev/xvdh`
+`sudo gdisk /dev/xvdh`
   
 ```
 Output:
