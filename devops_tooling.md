@@ -482,7 +482,7 @@ sudo systemctl status httpd
 ![](assets/26.png)
 ![](assets/27.png)
 
-9. Open the website in your browser http://Web-Server-Public-IP-Address-or-Public-DNS-Name/index.php and make sure you can login into the websute with myuser user.
+9. Open the website in your browser http://Web-Server-Public-IP-Address-or-Public-DNS-Name/index.php and make sure you can login into the website with myuser user.
     
 ![](assets/20.png)
 
