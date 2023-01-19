@@ -1,7 +1,7 @@
 # DevOps Tooling Website Solution
 
 In this follow-up tutorial,  we'd introducing a single DevOps Tooling Solution that will consist of the following:
-m
+
 - Jenkins - free and open source automation server used to build CI/CD pipelines.
 - Kubernetes - an open-source container-orchestration system for automating computer application deployment, scaling, and management.
 - Jfrog Artifactory - Universal Repository Manager supporting all major packaging formats, build tools and CI servers. Artifactory.
