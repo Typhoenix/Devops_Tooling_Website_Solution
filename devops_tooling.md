@@ -1,4 +1,4 @@
-# DevOps Tooling Website Solution.
+# DevOps Tooling Website Solution
 
 In this follow-up tutorial,  we'd introducing a single DevOps Tooling Solution that will consist of the following:
 
