@@ -1,5 +1,5 @@
 # DevOps Tooling Website Solution
-.
+
 In this follow-up tutorial,  we'd introducing a single DevOps Tooling Solution that will consist of the following:
 
 - Jenkins - free and open source automation server used to build CI/CD pipelines.
