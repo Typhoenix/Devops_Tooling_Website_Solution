@@ -20,7 +20,7 @@ In this project you will implement a solution that consists of following compone
 
 * Storage Server: Red Hat Enterprise Linux 8 + NFS Server.
 
-* Programming Language: PHP
+* Programming Language: PHP.
 
 ![](assets/1.png)
 
