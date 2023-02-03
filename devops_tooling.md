@@ -12,7 +12,7 @@ In this follow-up tutorial,  we'd introducing a single DevOps Tooling Solution t
   
 In this project you will implement a solution that consists of following components:
 
-* Infrastructure: AWS
+* Infrastructure: AWS.
 
 * Webserver Linux: Red Hat Enterprise Linux 8
 
