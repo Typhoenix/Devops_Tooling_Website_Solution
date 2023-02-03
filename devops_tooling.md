@@ -14,7 +14,7 @@ In this project you will implement a solution that consists of following compone
 
 * Infrastructure: AWS.
 
-* Webserver Linux: Red Hat Enterprise Linux 8
+* Webserver Linux: Red Hat Enterprise Linux 8.
 
 * Database Server: Ubuntu 20.04 + MySQL
 
