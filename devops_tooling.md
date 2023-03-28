@@ -282,7 +282,7 @@ Output:
 
  ![](assets/10.png)
 
- ## Step 2 -Confiqure the Web Server
+ ## Step 2 -Configure the Database Server
 Create an Ubuntu Server on AWS which will serve as our Database. **Ensure its in the same subnet as the NFS-Server**
 
 - Install mysql-server
